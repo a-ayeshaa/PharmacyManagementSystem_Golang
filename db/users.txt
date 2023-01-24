@@ -1,0 +1,4 @@
+Username: Ayesha, Password: 123, Role: Admin
+Username: Ayesha Akhtar, Password: 123, Role: Admin
+Username: admin, Password: 123, Role: Admin
+Username: customer, Password: 123, Role: Customer
