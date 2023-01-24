@@ -119,7 +119,7 @@ func main() {
 				case 3:
 					c.Printcart(con.Cartlist)
 				case 4:
-					val := c.Confirm()
+					val := c.Confirm(user.Username)
 					if val {
 						fmt.Println("Your order has been confirmed, order again!")
 					} else {

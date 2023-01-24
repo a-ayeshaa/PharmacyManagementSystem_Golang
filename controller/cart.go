@@ -102,7 +102,7 @@ func (ca Cart) Printcart(carts []Cart) {
 	}
 }
 
-func (ca Cart) Confirm() bool {
+func (ca Cart) Confirm(username string) bool {
 	if len(Cartlist) != 0 {
 		var total int = 0
 		for _, val := range Cartlist {
@@ -111,7 +111,7 @@ func (ca Cart) Confirm() bool {
 
 		o := Order{}
 		order := Order{
-			Username:   "customer",
+			Username:   username,
 			Totalprice: total,
 		}
 		fmt.Println(o.AddOrder(order))
