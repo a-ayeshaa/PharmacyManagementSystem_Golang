@@ -1,0 +1,4 @@
+ID: 0, Username: customer, Total Price: 6725 
+ID: 1, Username: customer, Total Price: 2541 
+ID: 0, Username: customer, Total Price: 1774 
+ID: 0, Username: customer, Total Price: 9012 
