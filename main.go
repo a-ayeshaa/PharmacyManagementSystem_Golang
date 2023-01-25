@@ -15,6 +15,7 @@ func main() {
 		//LOGIN .....
 		case 1:
 			reg.Login()
+			fmt.Println("testing")
 		//REGISTRATION....
 		case 2:
 			reg.Registration()
