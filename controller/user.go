@@ -46,39 +46,32 @@ func Users() []User {
 	}
 	for _, val := range lines {
 		arr := strings.Split(val, ", ")
-		var Username string
-		var Password string
-		var Role string
-		var Email string
+		var new User
 		for _, val2 := range arr {
 			u := strings.Split(val2, ": ")
+			// fmt.Println("u:",u)
 			if u[0] == "Username" {
-				Username = u[1]
+				new.Username = u[1]
 			}
 			if u[0] == "Password" {
-				Password = u[1]
+				new.Password = u[1]
 			}
 			if u[0] == "Role" {
-				Role = u[1]
+				new.Role = u[1]
 			}
 			if u[0] == "Email" {
-				Role = u[1]
+				new.Email = u[1]
 			}
 		}
-		user = append(user, User{
-			Username: Username,
-			Password: Password,
-			Role:     Role,
-			Email:    Email,
-		})
+		user = append(user, new)
 	}
 	return user
 }
 
-func ValidateUser(val string) error{
-	for _,user:=range Userlist{
-		if user.Username==val || user.Email==val{
-			return errors.New("User already exists")
+func ValidateUser(val string) error {
+	for _, user := range Userlist {
+		if user.Username == val || user.Email == val {
+			return errors.New("User already exists\n")
 		}
 	}
 	return nil
@@ -90,5 +83,5 @@ func Login(username, password string) (*User, error) {
 			return &Userlist[i], nil
 		}
 	}
-	return nil, errors.New("Username and Password does not match")
+	return nil, errors.New("Username and Password does not match\n")
 }
