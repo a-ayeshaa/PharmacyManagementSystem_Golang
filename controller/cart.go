@@ -34,14 +34,14 @@ func (ca Cart) AddtoCart(c Cart) Cart {
 			Cartlist[i].Totalprice += c.Totalprice
 			fmt.Println(Cartlist)
 			cartfile, err := os.Create("./db/carts.txt")
-			check(err)
+			Check(err)
 
 			defer cartfile.Close()
 			w := bufio.NewWriter(cartfile)
 			for _, ca := range Cartlist {
 				s := fmt.Sprintf("ID: %d, Name: %s, TotalPrice: %d, Quantity: %d \n", ca.Id, ca.Name, ca.Totalprice, ca.Quantity)
 				_, err := w.WriteString(s)
-				check(err)
+				Check(err)
 			}
 			w.Flush()
 			return c
@@ -49,13 +49,13 @@ func (ca Cart) AddtoCart(c Cart) Cart {
 	}
 	Cartlist = append(Cartlist, c)
 	cartfile, err := os.OpenFile("./db/carts.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	check(err)
+	Check(err)
 
 	defer cartfile.Close()
 	w := bufio.NewWriter(cartfile)
 	s := fmt.Sprintf("ID: %d, Name: %s, TotalPrice: %d, Quantity: %d \n", c.Id, c.Name, c.Totalprice, c.Quantity)
 	_, err1 := w.WriteString(s)
-	check(err1)
+	Check(err1)
 	w.Flush()
 	return c
 }
@@ -70,14 +70,14 @@ func (ca Cart) Remove(id int) bool {
 	}
 	// fmt.Println(Cartlist)
 	cartfile, err := os.Create("./db/carts.txt")
-	check(err)
+	Check(err)
 
 	defer cartfile.Close()
 	w := bufio.NewWriter(cartfile)
 	for _, c := range Cartlist {
 		s := fmt.Sprintf("ID: %d, Name: %s, TotalPrice: %d, Quantity: %d \n", c.Id, c.Name, c.Totalprice, c.Quantity)
 		_, err := w.WriteString(s)
-		check(err)
+		Check(err)
 	}
 	w.Flush()
 	return true

@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func check(e error) {
+func Check(e error) {
 	if e != nil {
 		panic(e)
 	}
@@ -27,14 +27,14 @@ func medSeed() []Medicine {
 	}
 	
 	medfile, err := os.OpenFile("./db/medicines.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	check(err)
+	Check(err)
 
 	defer medfile.Close()
 	w := bufio.NewWriter(medfile)
 	for _, medval := range med {
 		s := fmt.Sprintf("ID: %d, Name: %s, Price: %d \n", medval.Id, medval.Name, medval.Price)
 		_, err := w.WriteString(s)
-		check(err)
+		Check(err)
 	}
 	w.Flush()
 	return med
@@ -44,7 +44,7 @@ func MedFeed() []Medicine{
 	med := make([]Medicine, 0)
 
 	medfile, err := os.Open("./db/medicines.txt")
-    check(err)
+    Check(err)
 
     defer medfile.Close()
 
@@ -128,14 +128,14 @@ func (medicine Medicine) Get(Id int) Medicine {
 func (medicine Medicine) Add(M Medicine) Medicine {
 	Medlist = append(Medlist, M)
 	medfile, err := os.OpenFile("./db/medicines.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	check(err)
+	Check(err)
 
 	//adding to file
 	defer medfile.Close()
 	w := bufio.NewWriter(medfile)
 	s := fmt.Sprintf("ID: %d, Name: %s, Price: %d \n", M.Id, M.Name, M.Price)
 	_, err1 := w.WriteString(s)
-	check(err1)
+	Check(err1)
 	w.Flush()
 	return M
 }
@@ -150,14 +150,14 @@ func (medicine Medicine) Delete(Id int) bool {
 	}
 
 	medfile, err := os.Create("./db/medicines.txt")
-	check(err)
+	Check(err)
 
 	defer medfile.Close()
 	w := bufio.NewWriter(medfile)
 	for _, medval := range Medlist {
 		s := fmt.Sprintf("ID: %d, Name: %s, Price: %d \n", medval.Id, medval.Name, medval.Price)
 		_, err := w.WriteString(s)
-		check(err)
+		Check(err)
 	}
 	w.Flush()
 
@@ -173,14 +173,14 @@ func (medicine Medicine) Update(med Medicine) Medicine {
 
 	fmt.Println(Medlist)
 	medfile, err := os.Create("./db/medicines.txt")
-	check(err)
+	Check(err)
 
 	defer medfile.Close()
 	w := bufio.NewWriter(medfile)
 	for _, medval := range Medlist {
 		s := fmt.Sprintf("ID: %d, Name: %s, Price: %d \n", medval.Id, medval.Name, medval.Price)
 		_, err := w.WriteString(s)
-		check(err)
+		Check(err)
 	}
 	w.Flush()
 	return med

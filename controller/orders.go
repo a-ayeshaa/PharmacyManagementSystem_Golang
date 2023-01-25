@@ -29,19 +29,19 @@ func (or Order) AddOrder(o Order) Order {
 	order = append(order, o)
 
 	orderfile, err := os.OpenFile("./db/orders.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	check(err)
+	Check(err)
 
 	//adding to file
 	defer orderfile.Close()
 	w := bufio.NewWriter(orderfile)
 	s := fmt.Sprintf("ID: %d, Username: %s, Total Price: %d \n", o.Id, o.Username, o.Totalprice)
 	_, err1 := w.WriteString(s)
-	check(err1)
+	Check(err1)
 	w.Flush()
 
 	Cartlist=make([]Cart, 0)
 	err2:= os.Truncate("./db/carts.txt",0)
-	check(err2)
+	Check(err2)
 	return order[id]
 
 }
