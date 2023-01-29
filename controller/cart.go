@@ -6,7 +6,6 @@ import (
 	"os"
 	"strings"
 	// model "PharmaProject/models"
-
 )
 
 type Cart struct {
@@ -124,7 +123,7 @@ func (ca Cart) Confirm(username string) bool {
 
 func SearchMed(id int) Cart {
 	m := Medicine{}
-	val := m.Get(id)
+	val := m.GetMedicine(id)
 	newcart := Cart{
 		Id:         val.Id,
 		Name:       val.Name,

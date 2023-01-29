@@ -8,6 +8,7 @@ import (
 func Start() {
 	for {
 		var ch int
+		
 		fmt.Println("Welcome! You have the following options:\n 1. Login\n 2. Create a new account")
 		fmt.Print("Enter option number: ")
 		fmt.Scanln(&ch)

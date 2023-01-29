@@ -1,12 +1,12 @@
 package controller
 
 import (
+	populate "PharmaProject/migration"
+	model "PharmaProject/models"
 	"bufio"
 	"fmt"
 	"os"
 	"strings"
-	model "PharmaProject/models"
-	populate "PharmaProject/migration"
 )
 
 func Check(e error) {
@@ -39,23 +39,29 @@ type Medicine struct {
 	Price int
 }
 
-func NewMedicine() Controller {
+func NewMedicine() ProductController {
 	return &Medicine{}
 }
 // var medicine model.Medicine
 
-func (medicine *Medicine) GetAll() []model.Medicine {
+func (medicine *Medicine) GetAllMedicines() []model.Medicine {
 	// fmt.Println("Hello world", 1234)
 	return medDb()
 }
 
-func (medicine *Medicine) Get(Id int) model.Medicine {
+func (medicine *Medicine) GetMedicine(Id int) model.Medicine {
 	meds := medDb()
-
-	return meds[Id]
+	var found model.Medicine
+	for _,val:=range meds{
+		if val.Id==Id {
+			found=val
+			break
+		}
+	}
+	return found
 }
 
-func (medicine *Medicine) Add(M model.Medicine) model.Medicine {
+func (medicine *Medicine) AddMedicine(M model.Medicine) model.Medicine {
 	Medlist = append(Medlist, M)
 	medfile, err := os.OpenFile("./db/medicines.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	Check(err)
@@ -70,7 +76,7 @@ func (medicine *Medicine) Add(M model.Medicine) model.Medicine {
 	return M
 }
 
-func (medicine *Medicine) Delete(Id int) bool {
+func (medicine *Medicine) DeleteMedicine(Id int) bool {
 	// var med []Medicine
 	for i, medval := range Medlist {
 		if medval.Id == Id {
@@ -94,7 +100,7 @@ func (medicine *Medicine) Delete(Id int) bool {
 	return true
 }
 
-func (medicine *Medicine) Update(med model.Medicine) model.Medicine {
+func (medicine *Medicine) UpdateMedicine(med model.Medicine) model.Medicine {
 	for i, medval := range Medlist {
 		if medval.Id == med.Id {
 			Medlist[i] = med

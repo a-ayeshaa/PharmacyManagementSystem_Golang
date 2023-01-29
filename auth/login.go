@@ -16,9 +16,10 @@ func HandleValidationLogin() {
 }
 func Login() {
 	defer HandleValidationLogin()
+
 	m := con.NewMedicine()
 	c := con.Cart{}
-	meds := m.GetAll()
+	meds := m.GetAllMedicines()
 
 	var username string
 	var password string
@@ -53,15 +54,15 @@ func Login() {
 						Name:  name,
 						Price: price,
 					}
-					fmt.Println(m.Add(newmed))
-					con.Printlist(m.GetAll())
+					fmt.Println(m.AddMedicine(newmed))
+					con.Printlist(m.GetAllMedicines())
 
 				case 2:
 					var index int
 					fmt.Println("Enter the ID of the medicine you want to delete: ")
 					fmt.Scanln(&index)
-					m.Delete(index)
-					con.Printlist(m.GetAll())
+					m.DeleteMedicine(index)
+					con.Printlist(m.GetAllMedicines())
 
 				case 3:
 					var index int
@@ -79,14 +80,14 @@ func Login() {
 						Name:  name,
 						Price: price,
 					}
-					fmt.Println(m.Update(medupdate))
-					con.Printlist(m.GetAll())
+					fmt.Println(m.UpdateMedicine(medupdate))
+					con.Printlist(m.GetAllMedicines())
 
 				case 4:
 					var index int
 					fmt.Println("Enter the Id of the medicine :")
 					fmt.Scanln(&index)
-					fmt.Println(m.Get(index))
+					fmt.Println(m.GetMedicine(index))
 				case 5:
 					// err := os.Remove("./db/carts.txt")
 					// if err!=nil{
