@@ -4,9 +4,11 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	model "PharmaProject/models"
+
 )
 
-var order []Order
+var order []model.Order
 
 type Order struct {
 	Id         int
@@ -14,11 +16,11 @@ type Order struct {
 	Totalprice int
 }
 
-type IOrder interface {
-	AddOrder(o Order) Order
+func newOrder() OrderController{
+	return &Order{}
 }
 
-func (or Order) AddOrder(o Order) Order {
+func (or *Order) AddOrder(o model.Order) model.Order {
 	var id int
 	if len(order) == 0 {
 		id = 0
@@ -39,7 +41,7 @@ func (or Order) AddOrder(o Order) Order {
 	Check(err1)
 	w.Flush()
 
-	Cartlist=make([]Cart, 0)
+	Cartlist=make([]model.Cart, 0)
 	err2:= os.Truncate("./db/carts.txt",0)
 	Check(err2)
 	return order[id]

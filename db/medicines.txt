@@ -12,3 +12,5 @@ ID: 11, Name: Omidon22, Price: 22
 ID: 12, Name: Pantonix, Price: 22 
 ID: 13, Name: Fexo, Price: 22 
 ID: 14, Name: Ace, Price: 10 
+ID: 15, Name: Fexo, Price: 20 
+ID: 16, Name: Fexo120, Price: 100 

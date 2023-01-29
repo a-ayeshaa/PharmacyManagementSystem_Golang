@@ -39,13 +39,12 @@ type Medicine struct {
 	Price int
 }
 
-func NewMedicine() ProductController {
+
+func NewMedicine() MedicineController {
 	return &Medicine{}
 }
-// var medicine model.Medicine
 
 func (medicine *Medicine) GetAllMedicines() []model.Medicine {
-	// fmt.Println("Hello world", 1234)
 	return medDb()
 }
 

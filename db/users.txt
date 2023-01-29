@@ -2,3 +2,5 @@ Username: Ayesha, Password: 123, Role: Admin, Email: ayesha@gmail.com
 Username: Ayesha Akhtar, Password: 123, Role: Admin, Email: ayesha.akhtar@gmail.com
 Username: admin, Password: 123, Role: Admin, Email: admin@gmail.com
 Username: customer, Password: 123, Role: Customer, Email: customer@gmail.com
+Username: ayesha, Password: 123, Role: Customer, Email: ayesha 
+Username: ayesh, Password: 123, Role: Customer, Email: ayesh 

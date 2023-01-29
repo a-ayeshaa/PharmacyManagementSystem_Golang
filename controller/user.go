@@ -1,9 +1,13 @@
 package controller
 
 import (
+	model "PharmaProject/models"
 	"bufio"
 	"errors"
+	"fmt"
+	"net/mail"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -16,23 +20,37 @@ type User struct {
 
 var Userlist = Users()
 
-func Register(username, password, confpassword, email, role string) (*User, error) {
+func NewUser() UserController {
+	return &User{}
+}
+
+func (u *User) Register(username, password, confpassword, email, role string) (*model.User, error) {
 	if password == confpassword {
-		user := User{
+		user := model.User{
 			Username: username,
 			Password: password,
 			Role:     role,
 			Email:    email,
 		}
 		Userlist = append(Userlist, user)
+
+		userfile, err := os.OpenFile("./db/users.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		Check(err)
+
+		defer userfile.Close()
+		w := bufio.NewWriter(userfile)
+		s := fmt.Sprintf("Username: %s, Password: %s, Role: %s, Email: %s \n", user.Username, user.Password, user.Role, user.Email)
+		_, err1 := w.WriteString(s)
+		Check(err1)
+		w.Flush()
 		return &user, nil
 	}
 
 	return nil, errors.New("Confirm Password does not match with Password")
 }
 
-func Users() []User {
-	user := make([]User, 0)
+func Users() []model.User {
+	user := make([]model.User, 0)
 
 	userfile, err := os.Open("./db/users.txt")
 	Check(err)
@@ -46,7 +64,7 @@ func Users() []User {
 	}
 	for _, val := range lines {
 		arr := strings.Split(val, ", ")
-		var new User
+		var new model.User
 		for _, val2 := range arr {
 			u := strings.Split(val2, ": ")
 			// fmt.Println("u:",u)
@@ -68,7 +86,11 @@ func Users() []User {
 	return user
 }
 
-func ValidateUser(val string) error {
+func (u *User) GetAllUsers() []model.User {
+	return Userlist
+}
+
+func (u *User) ValidateUser(val string) error {
 	for _, user := range Userlist {
 		if user.Username == val || user.Email == val {
 			return errors.New("User already exists\n")
@@ -77,7 +99,23 @@ func ValidateUser(val string) error {
 	return nil
 }
 
-func Login(username, password string) (*User, error) {
+func Validate(email string) error {
+	_, err := mail.ParseAddress(email)
+	if err != nil {
+		return errors.New("Email must contain @address.com \n e.g your-name@gmail.com")
+
+	}
+	return nil
+}
+
+func ValidatePass(pass string) {
+	// rmatch, err := regexp.MatchString(`/^.*(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$ %^&*~><.,:;]).*$/i`,pass)
+	rmatch, err := regexp.MatchString(`(?=abc)`,pass)
+	fmt.Println(rmatch,err)
+
+}
+
+func (u *User) Login(username, password string) (*model.User, error) {
 	for i := range Userlist {
 		if Userlist[i].Username == username && Userlist[i].Password == password {
 			return &Userlist[i], nil

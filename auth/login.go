@@ -20,6 +20,7 @@ func Login() {
 	m := con.NewMedicine()
 	c := con.Cart{}
 	meds := m.GetAllMedicines()
+	newUser:=con.NewUser()
 
 	var username string
 	var password string
@@ -28,7 +29,7 @@ func Login() {
 	fmt.Print("Enter Password:	")
 	fmt.Scanln(&password)
 
-	user, err := con.Login(username, password)
+	user, err := newUser.Login(username, password)
 	// fmt.Println(user)
 	if user != nil && err == nil {
 		con.Printlist(meds)
@@ -122,12 +123,12 @@ func Login() {
 					var id int
 					fmt.Println("Enter ID:")
 					fmt.Scanln(&id)
-					c.Remove(id)
+					c.RemovefromCart(id)
 					fmt.Println(con.Cartlists())
 				case 3:
-					c.Printcart(con.Cartlist)
+					c.PrintCart(con.Cartlist)
 				case 4:
-					val := c.Confirm(user.Username)
+					val := c.ConfirmOrder(user.Username)
 					if val {
 						fmt.Println("Your order has been confirmed, order again!")
 					} else {

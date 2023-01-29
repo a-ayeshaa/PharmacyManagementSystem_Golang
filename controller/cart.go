@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	// model "PharmaProject/models"
+	model "PharmaProject/models"
 )
 
 type Cart struct {
@@ -15,20 +15,22 @@ type Cart struct {
 	Quantity   int
 }
 
-var Cartlist []Cart
+var Cartlist []model.Cart
 
-func Cartlists() []Cart {
+func Cartlists() []model.Cart {
 	return Cartlist
 }
 
-type ICart interface {
-	AddtoCart(c Cart) Cart
-	Remove(id int) bool
-	Printcart(carts []Cart)
-	Confirm() bool
+func NewCart() CartController{
+	return &Cart{}
 }
 
-func (ca Cart) AddtoCart(c Cart) Cart {
+func (ca *Cart) GetAllfromCart() []model.Cart{
+	return Cartlist
+}
+
+
+func (ca *Cart) AddtoCart(c model.Cart) model.Cart {
 	for i := range Cartlist {
 		if Cartlist[i].Id == c.Id {
 			Cartlist[i].Quantity += c.Quantity
@@ -61,7 +63,7 @@ func (ca Cart) AddtoCart(c Cart) Cart {
 	return c
 }
 
-func (ca Cart) Remove(id int) bool {
+func (ca *Cart) RemovefromCart(id int) bool {
 	for i, cartval := range Cartlist {
 		if cartval.Id == id {
 			Cartlist = append(Cartlist[:i], Cartlist[i+1:]...)
@@ -84,7 +86,7 @@ func (ca Cart) Remove(id int) bool {
 	return true
 }
 
-func (ca Cart) Printcart(carts []Cart) {
+func (ca *Cart) PrintCart(carts []model.Cart) {
 	if len(carts) == 0 {
 		fmt.Println("Cart is empty")
 	} else {
@@ -103,15 +105,15 @@ func (ca Cart) Printcart(carts []Cart) {
 	}
 }
 
-func (ca Cart) Confirm(username string) bool {
+func (ca *Cart) ConfirmOrder(username string) bool {
 	if len(Cartlist) != 0 {
 		var total int = 0
 		for _, val := range Cartlist {
 			total += val.Totalprice
 		}
 
-		o := Order{}
-		order := Order{
+		o := newOrder()
+		order := model.Order{
 			Username:   username,
 			Totalprice: total,
 		}
@@ -121,10 +123,10 @@ func (ca Cart) Confirm(username string) bool {
 	return false
 }
 
-func SearchMed(id int) Cart {
+func SearchMed(id int) model.Cart {
 	m := Medicine{}
 	val := m.GetMedicine(id)
-	newcart := Cart{
+	newcart := model.Cart{
 		Id:         val.Id,
 		Name:       val.Name,
 		Totalprice: val.Price,

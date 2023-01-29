@@ -6,17 +6,17 @@ type Medicine struct {
 	Price int
 }
 
-func NewMedicine() Product {
-	return &Medicine{}
-}
+// func NewMedicine() Product {
+// 	return &Medicine{}
+// }
 
-func (m *Medicine) SetID(id int) {
-	m.Id = id
-}
+// func (m *Medicine) SetID(id int) {
+// 	m.Id = id
+// }
 
-func (m *Medicine) SetName(name string) {
-
-}
-func (m *Medicine) SetPrice(price int) {
-
-}
+// func (m *Medicine) SetName(name string) {
+// 	m.Name=name
+// }
+// func (m *Medicine) SetPrice(price int) {
+// 	m.Price=price
+// }
