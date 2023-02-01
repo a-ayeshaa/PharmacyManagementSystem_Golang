@@ -43,7 +43,7 @@ func (u *User) RegisterUser(username, password, confpassword, email, role string
 
 		defer userfile.Close()
 		w := bufio.NewWriter(userfile)
-		s := fmt.Sprintf("Username: %s, Password: %s, Role: %s, Email: %s \n", user.Username, user.Password, user.Role, user.Email)
+		s := fmt.Sprintf("ID:%d, Username: %s, Password: %s, Role: %s, Email: %s \n", user.ID, user.Username, user.Password, user.Role, user.Email)
 		_, err1 := w.WriteString(s)
 		Check(err1)
 		w.Flush()
@@ -66,7 +66,7 @@ func (u *User) Register(user model.User) (*model.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	if user.Password == user.ConfirmPassword {
+	if user.Password == user.Confirm_password {
 		var index int = Userlist[len(Userlist)-1].ID + 1
 		user.ID = index
 		Userlist = append(Userlist, user)
@@ -76,7 +76,7 @@ func (u *User) Register(user model.User) (*model.User, error) {
 
 		defer userfile.Close()
 		w := bufio.NewWriter(userfile)
-		s := fmt.Sprintf("ID: %d,Username: %s, Password: %s, Role: %s, Email: %s \n", user.ID, user.Username, user.Password, user.Role, user.Email)
+		s := fmt.Sprintf("ID: %d, Username: %s, Password: %s, Role: %s, Email: %s \n", user.ID, user.Username, user.Password, user.Role, user.Email)
 		_, err1 := w.WriteString(s)
 		Check(err1)
 		w.Flush()
@@ -110,6 +110,7 @@ func Users() []model.User {
 			}
 			if u[0] == "ID" {
 				new.ID, _ = strconv.Atoi(u[1])
+				// fmt.Println(new.ID)
 			}
 			if u[0] == "Password" {
 				new.Password = u[1]
@@ -132,8 +133,12 @@ func (u *User) GetAllUsers() []model.User {
 
 func (u *User) ValidateUser(val string) error {
 	for _, user := range Userlist {
-		if user.Username == val || user.Email == val {
-			return errors.New("User already exists\n")
+		if user.Username == val {
+			return errors.New("Username already exists\n")
+		}
+		// fmt.Println(user.Email, val)
+		if strings.TrimSpace(user.Email) == strings.TrimSpace(val) {
+			return errors.New("Email already exists\n")
 		}
 	}
 	return nil
@@ -185,7 +190,7 @@ func (u *User) DeleteUserbyID(id int) (bool, error) {
 			defer userfile.Close()
 			w := bufio.NewWriter(userfile)
 			for _, user := range Userlist {
-				s := fmt.Sprintf("ID: %d,Username: %s, Password: %s, Role: %s, Email: %s \n", user.ID, user.Username, user.Password, user.Role, user.Email)
+				s := fmt.Sprintf("ID: %d, Username: %s, Password: %s, Role: %s, Email: %s \n", user.ID, user.Username, user.Password, user.Role, user.Email)
 				_, err := w.WriteString(s)
 				Check(err)
 			}
@@ -199,17 +204,30 @@ func (u *User) DeleteUserbyID(id int) (bool, error) {
 
 }
 
-func (u *User)	UpdateUserbyID(user model.User) (*model.User,error){
-	for i, val := range Userlist {
-		if val.ID == user.ID {
-			Userlist[i]=user
+func (u *User) UpdateUserbyID(user model.User) (*model.User, error) {
+	err := u.ValidateUser(user.Username)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("/////")
+	err = Validate(user.Email)
+	if err != nil {
+		return nil, err
+	}
+	err = u.ValidateUser(user.Email)
+	if err != nil {
+		return nil, err
+	}
+	for i := range Userlist {
+		if Userlist[i].ID == user.ID {
+			Userlist[i] = user
 			userfile, err := os.Create("./db/users.txt")
 			Check(err)
 			fmt.Println(Userlist)
 			defer userfile.Close()
 			w := bufio.NewWriter(userfile)
 			for _, user := range Userlist {
-				s := fmt.Sprintf("ID: %d,Username: %s, Password: %s, Role: %s, Email: %s \n", user.ID, user.Username, user.Password, user.Role, user.Email)
+				s := fmt.Sprintf("ID: %d, Username: %s, Password: %s, Role: %s, Email: %s \n", user.ID, user.Username, user.Password, user.Role, user.Email)
 				_, err := w.WriteString(s)
 				Check(err)
 			}
@@ -217,7 +235,9 @@ func (u *User)	UpdateUserbyID(user model.User) (*model.User,error){
 
 			return &Userlist[i], nil
 		}
+		fmt.Println(Userlist)
+		fmt.Println(Userlist[i].ID, user.ID)
 	}
 
-	return nil,errors.New("User does not exist")
+	return nil, errors.New("User does not exist")
 }

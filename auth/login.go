@@ -42,7 +42,6 @@ func Login() {
 				fmt.Scanln(&choice)
 				switch choice {
 				case 1:
-					var index int = con.Medlist[len(con.Medlist)-1].Id + 1
 					var price int
 					var name string
 					fmt.Println("Set Name: ")
@@ -51,7 +50,7 @@ func Login() {
 					fmt.Scanln(&price)
 
 					newmed := model.Medicine{
-						Id:    index,
+						// Id:    index,
 						Name:  name,
 						Price: price,
 					}

@@ -1,9 +1,9 @@
 package models
 
 type Medicine struct {
-	Id    int
-	Name  string
-	Price int
+	Id    int    `json:"id"`
+	Name  string `json:"name" binding:"required"`
+	Price int    `json:"price" binding:"required"`
 }
 
 // func NewMedicine() Product {

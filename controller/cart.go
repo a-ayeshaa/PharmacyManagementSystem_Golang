@@ -125,7 +125,7 @@ func (ca *Cart) ConfirmOrder(username string) bool {
 
 func SearchMed(id int) model.Cart {
 	m := Medicine{}
-	val := m.GetMedicine(id)
+	val,_ := m.GetMedicine(id)
 	newcart := model.Cart{
 		Id:         val.Id,
 		Name:       val.Name,

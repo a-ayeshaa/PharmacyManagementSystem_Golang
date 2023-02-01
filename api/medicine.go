@@ -1,4 +1,4 @@
-package apicontroller
+package api
 
 import (
 	con "PharmaProject/controller"
@@ -10,10 +10,10 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func GetAllUsers(response http.ResponseWriter, request *http.Request) {
+func GetAllMedicines(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
-	allUsers := con.NewUser().GetAllUsers()
-	err := json.NewEncoder(response).Encode(allUsers)
+	allMeds := con.NewMedicine().GetAllMedicines()
+	err := json.NewEncoder(response).Encode(allMeds)
 	response.WriteHeader(http.StatusOK)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusInternalServerError)
@@ -21,9 +21,9 @@ func GetAllUsers(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func GetUserByID(response http.ResponseWriter, request *http.Request) {
-	userid, _ := strconv.Atoi(chi.URLParam(request, "userid"))
-	user, err := con.NewUser().GetUserByID(userid)
+func GetMedbyID(response http.ResponseWriter, request *http.Request) {
+	medid, _ := strconv.Atoi(chi.URLParam(request, "med_id"))
+	user, err := con.NewMedicine().GetMedicine(medid)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusBadRequest)
 		return
@@ -37,24 +37,21 @@ func GetUserByID(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func AddUser(response http.ResponseWriter, request *http.Request) {
+func AddMedicine(response http.ResponseWriter, request *http.Request) {
 	contentType := request.Header.Get("Content-Type")
 	if contentType != "" && contentType != "application/json" {
 		http.Error(response, "Content-Type header is not application/json", http.StatusUnsupportedMediaType)
 		return
 	}
 	response.Header().Set("Content-Type", "application/json")
-	var user model.User
-	err := json.NewDecoder(request.Body).Decode(&user)
+	var med model.Medicine
+	err := json.NewDecoder(request.Body).Decode(&med)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusBadRequest)
 		return
 	}
-	newUser, err := con.NewUser().Register(user)
-	if err != nil {
-		http.Error(response, err.Error(), http.StatusConflict)
-	}
-	err = json.NewEncoder(response).Encode(newUser)
+	newmed := con.NewMedicine().AddMedicine(med)
+	err = json.NewEncoder(response).Encode(newmed)
 	response.WriteHeader(http.StatusOK)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusInternalServerError)
@@ -62,15 +59,15 @@ func AddUser(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func DeleteUserbyID(response http.ResponseWriter, request *http.Request) {
-	userid, _ := strconv.Atoi(chi.URLParam(request, "userid"))
-	user, err := con.NewUser().DeleteUserbyID(userid)
+func DeleteMedicinebyID(response http.ResponseWriter, request *http.Request) {
+	med_id, _ := strconv.Atoi(chi.URLParam(request, "med_id"))
+	med, err := con.NewMedicine().DeleteMedicine(med_id)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusBadRequest)
 		return
 	}
 	response.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(response).Encode(user)
+	err = json.NewEncoder(response).Encode(med)
 	response.WriteHeader(http.StatusOK)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusInternalServerError)
@@ -78,22 +75,23 @@ func DeleteUserbyID(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func UpdateUserbyID(response http.ResponseWriter, request *http.Request) {
-	userid, _ := strconv.Atoi(chi.URLParam(request, "userid"))
+func UpdateMedicinebyID(response http.ResponseWriter, request *http.Request) {
+	med_id, _ := strconv.Atoi(chi.URLParam(request, "med_id"))
 	contentType := request.Header.Get("Content-Type")
 	if contentType != "" && contentType != "application/json" {
 		http.Error(response, "Content-Type header is not application/json", http.StatusUnsupportedMediaType)
 		return
 	}
 	response.Header().Set("Content-Type", "application/json")
-	var updateuser model.User
-	err := json.NewDecoder(request.Body).Decode(&updateuser)
+	var update_med model.Medicine
+	err := json.NewDecoder(request.Body).Decode(&update_med)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusBadRequest)
 		return
 	}
-	updateuser.ID=userid
-	user, err := con.NewUser().UpdateUserbyID(updateuser)
+	update_med.Id = med_id
+	// fmt.Println(updateuser.ID)
+	user, err := con.NewMedicine().UpdateMedicine(update_med)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusConflict)
 	}
