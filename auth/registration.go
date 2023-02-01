@@ -32,6 +32,6 @@ func Registration() {
 	fmt.Scanln(&confpassword)
 	fmt.Print("Enter Role: ")
 	fmt.Scanln(&role)
-	n,err:=newUser.Register(username,password,confpassword,email,role)
+	n,err:=newUser.RegisterUser(username,password,confpassword,email,role)
 	fmt.Println(n,err)
 }
