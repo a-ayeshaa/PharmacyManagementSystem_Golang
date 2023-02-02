@@ -25,14 +25,14 @@ type MedicineController interface {
 
 type CartController interface {
 	GetAllfromCart() []model.Cart
-	AddtoCart(cart model.Cart) model.Cart
-	PrintCart([]model.Cart)
-	RemovefromCart(Id int) bool
-	ConfirmOrder(username string) bool
+	AddtoCart(cart model.Cart) (*model.Cart,error)
+	GetItemfromCart(int) (*model.Cart,error)
+	RemovefromCart(Id int) (bool,error)
 }
 
 type OrderController interface {
-	AddOrder(model.Order) model.Order
+	ConfirmOrder(username string) (*model.Order,error)
+	GetAllOrder() []model.Order
 }
 
 // type SnackController interface{

@@ -106,17 +106,18 @@ func Login() {
 				fmt.Scanln(&choice)
 				switch choice {
 				case 1:
-					var id int
-					var q int
+					var cart model.Cart
+					// var id int
+					// var q int
 					fmt.Println("Enter ID :")
-					fmt.Scanln(&id)
-					add := con.SearchMed(id)
+					fmt.Scanln(&cart.Id)
+					// add,err := con.SearchMed()
 					fmt.Println("Enter Quantity :")
-					fmt.Scanln(&q)
-					add.Totalprice = add.Totalprice * q
-					add.Quantity = q
+					fmt.Scanln(&cart.Quantity)
+					// add.Totalprice = add.Totalprice * q
+					// add.Quantity = q
 					// cart:=Cart{1,"Napa",200,2}
-					c.AddtoCart(add)
+					c.AddtoCart(cart)
 					fmt.Println(con.Cartlists())
 				case 2:
 					var id int
@@ -125,11 +126,12 @@ func Login() {
 					c.RemovefromCart(id)
 					fmt.Println(con.Cartlists())
 				case 3:
-					c.PrintCart(con.Cartlist)
+					con.PrintCart(con.Cartlist)
 				case 4:
-					val := c.ConfirmOrder(user.Username)
-					if val {
+					val,err := con.NewOrder().ConfirmOrder(user.Username)
+					if err==nil {
 						fmt.Println("Your order has been confirmed, order again!")
+						fmt.Println(val)
 					} else {
 						fmt.Println("Your cart is empty.")
 					}

@@ -1,11 +1,12 @@
 package controller
 
 import (
+	model "PharmaProject/models"
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
-	model "PharmaProject/models"
 )
 
 type Cart struct {
@@ -21,16 +22,21 @@ func Cartlists() []model.Cart {
 	return Cartlist
 }
 
-func NewCart() CartController{
+func NewCart() CartController {
 	return &Cart{}
 }
 
-func (ca *Cart) GetAllfromCart() []model.Cart{
+func (ca *Cart) GetAllfromCart() []model.Cart {
 	return Cartlist
 }
 
-
-func (ca *Cart) AddtoCart(c model.Cart) model.Cart {
+func (ca *Cart) AddtoCart(c model.Cart) (*model.Cart,error) {
+	newmed,err := SearchMed(c.Id)
+	if err!=nil{
+		return nil,err
+	}
+	c.Name=newmed.Name
+	c.Totalprice = newmed.Totalprice * c.Quantity
 	for i := range Cartlist {
 		if Cartlist[i].Id == c.Id {
 			Cartlist[i].Quantity += c.Quantity
@@ -47,7 +53,7 @@ func (ca *Cart) AddtoCart(c model.Cart) model.Cart {
 				Check(err)
 			}
 			w.Flush()
-			return c
+			return &c,nil
 		}
 	}
 	Cartlist = append(Cartlist, c)
@@ -60,33 +66,42 @@ func (ca *Cart) AddtoCart(c model.Cart) model.Cart {
 	_, err1 := w.WriteString(s)
 	Check(err1)
 	w.Flush()
-	return c
+	return &c,nil
 }
 
-func (ca *Cart) RemovefromCart(id int) bool {
+func (ca *Cart) GetItemfromCart(id int) (*model.Cart, error) {
+	for _, val := range Cartlist {
+		if val.Id == id {
+			return &val, nil
+		}
+	}
+	return nil, errors.New("Item with that Id could not be found")
+}
+
+func (ca *Cart) RemovefromCart(id int) (bool, error) {
 	for i, cartval := range Cartlist {
 		if cartval.Id == id {
 			Cartlist = append(Cartlist[:i], Cartlist[i+1:]...)
-			break
+			cartfile, err := os.Create("./db/carts.txt")
+			Check(err)
+
+			defer cartfile.Close()
+			w := bufio.NewWriter(cartfile)
+			for _, c := range Cartlist {
+				s := fmt.Sprintf("ID: %d, Name: %s, TotalPrice: %d, Quantity: %d \n", c.Id, c.Name, c.Totalprice, c.Quantity)
+				_, err := w.WriteString(s)
+				Check(err)
+			}
+			w.Flush()
+			return true, nil
 		}
 
 	}
-	// fmt.Println(Cartlist)
-	cartfile, err := os.Create("./db/carts.txt")
-	Check(err)
+	return false, errors.New("Medicine could not be found")
 
-	defer cartfile.Close()
-	w := bufio.NewWriter(cartfile)
-	for _, c := range Cartlist {
-		s := fmt.Sprintf("ID: %d, Name: %s, TotalPrice: %d, Quantity: %d \n", c.Id, c.Name, c.Totalprice, c.Quantity)
-		_, err := w.WriteString(s)
-		Check(err)
-	}
-	w.Flush()
-	return true
 }
 
-func (ca *Cart) PrintCart(carts []model.Cart) {
+func PrintCart(carts []model.Cart) {
 	if len(carts) == 0 {
 		fmt.Println("Cart is empty")
 	} else {
@@ -105,32 +120,19 @@ func (ca *Cart) PrintCart(carts []model.Cart) {
 	}
 }
 
-func (ca *Cart) ConfirmOrder(username string) bool {
-	if len(Cartlist) != 0 {
-		var total int = 0
-		for _, val := range Cartlist {
-			total += val.Totalprice
-		}
 
-		o := newOrder()
-		order := model.Order{
-			Username:   username,
-			Totalprice: total,
-		}
-		fmt.Println(o.AddOrder(order))
-		return true
-	}
-	return false
-}
 
-func SearchMed(id int) model.Cart {
+func SearchMed(id int) (*model.Cart,error) {
 	m := Medicine{}
-	val,_ := m.GetMedicine(id)
+	val, err := m.GetMedicine(id)
+	if err!=nil{
+		return nil,err
+	}
 	newcart := model.Cart{
 		Id:         val.Id,
 		Name:       val.Name,
 		Totalprice: val.Price,
 		Quantity:   0,
 	}
-	return newcart
+	return &newcart,nil
 }

@@ -1,14 +1,16 @@
 package controller
 
 import (
+	model "PharmaProject/models"
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
-	model "PharmaProject/models"
-
+	"strconv"
+	"strings"
 )
 
-var order []model.Order
+var OrderList = Orders()
 
 type Order struct {
 	Id         int
@@ -16,19 +18,58 @@ type Order struct {
 	Totalprice int
 }
 
-func newOrder() OrderController{
+func Orders() []model.Order {
+	order := make([]model.Order, 0)
+
+	orderfile, err := os.Open("./db/orders.txt")
+	Check(err)
+
+	defer orderfile.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(orderfile)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	for _, val := range lines {
+		arr := strings.Split(val, ", ")
+		var new model.Order
+		for _, val2 := range arr {
+			u := strings.Split(val2, ": ")
+			// fmt.Println("u:",u)
+			if u[0] == "Username" {
+				new.Username = u[1]
+			}
+			if u[0] == "ID" {
+				new.Id, _ = strconv.Atoi(u[1])
+				// fmt.Println(new.ID)
+			}
+			if u[0] == "Total Price" {
+				new.Totalprice, _ = strconv.Atoi(u[1])
+			}
+		}
+		order = append(order, new)
+	}
+	return order
+}
+
+func NewOrder() OrderController {
 	return &Order{}
 }
 
-func (or *Order) AddOrder(o model.Order) model.Order {
+func (or *Order) GetAllOrder() []model.Order {
+	return OrderList
+}
+
+func AddOrder(o model.Order) model.Order {
 	var id int
-	if len(order) == 0 {
+	if len(OrderList) == 0 {
 		id = 0
 	} else {
-		id = order[len(order)-1].Id + 1
+		id = OrderList[len(OrderList)-1].Id + 1
 	}
 	o.Id = id
-	order = append(order, o)
+	OrderList = append(OrderList, o)
 
 	orderfile, err := os.OpenFile("./db/orders.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	Check(err)
@@ -41,9 +82,32 @@ func (or *Order) AddOrder(o model.Order) model.Order {
 	Check(err1)
 	w.Flush()
 
-	Cartlist=make([]model.Cart, 0)
-	err2:= os.Truncate("./db/carts.txt",0)
+	Cartlist = make([]model.Cart, 0)
+	err2 := os.Truncate("./db/carts.txt", 0)
 	Check(err2)
-	return order[id]
+	return OrderList[id]
 
+}
+
+func (or *Order) ConfirmOrder(username string) (*model.Order, error) {
+	cart := NewCart().GetAllfromCart()
+	fmt.Println(len(cart))
+	if len(cart) != 0 {
+		var total int = 0
+		// fmt.Println("123")
+		for _, val := range cart {
+			total += val.Totalprice
+		}
+
+		order := model.Order{
+			Username:   username,
+			Totalprice: total,
+		}
+		// o,err := AddOrder(order)
+		newo := AddOrder(order)
+		return &newo, nil
+	}
+	// fmt.Println(len(cart)+1)
+
+	return nil, errors.New("Cart is empty!")
 }

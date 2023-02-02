@@ -1,4 +1,5 @@
 ID: 0, Username: customer, Total Price: 6725 
 ID: 1, Username: customer, Total Price: 2541 
-ID: 0, Username: customer, Total Price: 1774 
-ID: 0, Username: customer, Total Price: 9012 
+ID: 2, Username: customer, Total Price: 1774 
+ID: 3, Username: customer, Total Price: 9012 
+ID: 4, Username: ayesha, Total Price: 7030 
