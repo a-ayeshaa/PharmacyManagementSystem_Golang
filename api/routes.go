@@ -35,7 +35,7 @@ func Init() {
 
 	r.Route("/order", func(r chi.Router) {
 		r.Get("/", GetAllOrder)
-		r.Get("/confirm", ConfirmOrder)
+		r.Post("/confirm", ConfirmOrder)
 
 	})
 	port := ":3000"

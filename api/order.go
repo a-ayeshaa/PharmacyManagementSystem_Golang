@@ -4,11 +4,8 @@ import (
 	con "PharmaProject/controller"
 	model "PharmaProject/models"
 	"encoding/json"
-
-	// "fmt"
+	"github.com/asaskevich/govalidator"
 	"net/http"
-	// "strconv"
-	// "github.com/go-chi/chi/v5"
 )
 
 func GetAllOrder(response http.ResponseWriter, request *http.Request) {
@@ -36,6 +33,14 @@ func ConfirmOrder(response http.ResponseWriter, request *http.Request) {
 		http.Error(response, err.Error(), http.StatusBadRequest)
 		return
 	}
+	result, err := govalidator.ValidateStruct(order)
+	if err != nil {
+		// println("error: " + err.Error())
+		http.Error(response, err.Error(), http.StatusBadRequest)
+		return
+
+	}
+	println(result)
 	neworder, err := con.NewOrder().ConfirmOrder(order.Username)
 	if err != nil {
 		// fmt.Println("//123//")

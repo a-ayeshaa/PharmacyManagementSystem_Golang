@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"github.com/asaskevich/govalidator"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -51,6 +52,14 @@ func AddtoCart(response http.ResponseWriter, request *http.Request) {
 		http.Error(response, err.Error(), http.StatusBadRequest)
 		return
 	}
+	result, err := govalidator.ValidateStruct(med)
+	if err != nil {
+		// println("error: " + err.Error())
+		http.Error(response, err.Error(), http.StatusBadRequest)
+		return
+
+	}
+	println(result)
 	newmed,err := con.NewCart().AddtoCart(med)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusBadRequest)

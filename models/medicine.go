@@ -2,8 +2,8 @@ package models
 
 type Medicine struct {
 	Id    int    `json:"id"`
-	Name  string `json:"name" binding:"required"`
-	Price int    `json:"price" binding:"required"`
+	Name  string `json:"name" valid:"required"`
+	Price int    `json:"price" valid:"required"`
 }
 
 // func NewMedicine() Product {
