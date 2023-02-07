@@ -16,7 +16,6 @@ func HandleValidationLogin() {
 }
 func Login() {
 	defer HandleValidationLogin()
-
 	m := con.NewMedicine()
 	c := con.Cart{}
 	meds := m.GetAllMedicines()

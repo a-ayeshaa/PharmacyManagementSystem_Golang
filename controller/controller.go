@@ -7,7 +7,7 @@ import (
 type UserController interface {
 	GetAllUsers() []model.User
 	RegisterUser(username, password, confpassword, email, role string) (*model.User, error)
-	Register(model.User) (*model.User, error)
+	Register(model.RegisterUser) (*model.User, error)
 	Login(username, password string) (*model.User, error)
 	ValidateUser(val string) error
 	GetUserByID(id int) (*model.User, error)

@@ -44,7 +44,7 @@ func AddUser(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 	response.Header().Set("Content-Type", "application/json")
-	var user model.User
+	var user model.RegisterUser
 	err := json.NewDecoder(request.Body).Decode(&user)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusBadRequest)
