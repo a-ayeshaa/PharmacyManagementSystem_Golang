@@ -180,12 +180,18 @@ func ValidatePass(pass string) {
 
 }
 
-func (u *User) Login(username, password string) (*model.User, error) {
-	for i := range Userlist {
-		if Userlist[i].Username == username && Userlist[i].Password == password {
-			return &Userlist[i], nil
-		}
+func (u *User) Login(login model.Login) (*model.User, error) {
+	// for i := range Userlist {
+	// 	if Userlist[i].Username == username && Userlist[i].Password == password {
+	// 		return &Userlist[i], nil
+	// 	}
+	// }
+	var user model.User
+	result := db.First(&user, &login)
+	if result.Error == nil {
+		return &user, nil
 	}
+	// fmt.Println(user)
 	return nil, errors.New("Username and Password does not match\n")
 }
 
@@ -278,7 +284,7 @@ func (u *User) UpdateUserbyID(user model.User) (*model.User, error) {
 		if result.RowsAffected > 0 {
 			return &up, nil
 		}
-		return nil,result.Error
+		return nil, result.Error
 	}
 
 	return nil, errors.New("User does not exist")

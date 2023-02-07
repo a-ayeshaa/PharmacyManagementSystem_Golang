@@ -21,14 +21,15 @@ func Login() {
 	meds := m.GetAllMedicines()
 	newUser:=con.NewUser()
 
-	var username string
-	var password string
+	var login model.Login
+	// var username string
+	// var password string
 	fmt.Print("Enter Username:	")
-	fmt.Scanln(&username)
+	fmt.Scanln(&login.Username)
 	fmt.Print("Enter Password:	")
-	fmt.Scanln(&password)
+	fmt.Scanln(&login.Password)
 
-	user, err := newUser.Login(username, password)
+	user, err := newUser.Login(login)
 	// fmt.Println(user)
 	if user != nil && err == nil {
 		con.Printlist(meds)

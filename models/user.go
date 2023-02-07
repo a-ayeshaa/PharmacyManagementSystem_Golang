@@ -22,3 +22,8 @@ type User struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type Login struct {
+	Username string `json:"username" valid:"required"`
+	Password string `json:"password" valid:"required"`
+}

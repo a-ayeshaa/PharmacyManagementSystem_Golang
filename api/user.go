@@ -6,9 +6,43 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+
 	"github.com/asaskevich/govalidator"
 	"github.com/go-chi/chi/v5"
 )
+
+func Login(response http.ResponseWriter, request *http.Request) {
+	contentType := request.Header.Get("Content-Type")
+	if contentType != "" && contentType != "application/json" {
+		http.Error(response, "Content-Type header is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	response.Header().Set("Content-Type", "application/json")
+	var user model.Login
+	err := json.NewDecoder(request.Body).Decode(&user)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusBadRequest)
+		return
+	}
+	result, err := govalidator.ValidateStruct(user)
+	if err != nil {
+		// println("error: " + err.Error())
+		http.Error(response, err.Error(), http.StatusBadRequest)
+		return
+
+	}
+	println(result)
+	newUser, err := con.NewUser().Login(user)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusConflict)
+	}
+	err = json.NewEncoder(response).Encode(newUser)
+	response.WriteHeader(http.StatusOK)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
 
 func GetAllUsers(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")

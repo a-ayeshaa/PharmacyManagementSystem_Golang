@@ -9,6 +9,7 @@ import (
 
 func Init() {
 	r := chi.NewRouter()
+	r.Post("/login",Login)
 	r.Route("/user", func(r chi.Router) {
 		r.Get("/", GetAllUsers)
 		r.Get("/{userid}", GetUserByID)
