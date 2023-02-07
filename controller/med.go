@@ -61,15 +61,10 @@ func (medicine *Medicine) GetMedicine(Id int) (*model.Medicine, error) {
 }
 
 func (medicine *Medicine) AddMedicine(M model.Medicine) (*model.Medicine, error) {
-	//
-	// db.Create(&Medlist)
-
 	result := db.Create(&M)
 	if result.Error != nil {
-		// fmt.Println(M.Id)
 		return nil, result.Error
 	}
-	// fmt.Println(M.Id)
 	return &M, nil
 }
 
