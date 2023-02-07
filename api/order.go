@@ -4,8 +4,10 @@ import (
 	con "PharmaProject/controller"
 	model "PharmaProject/models"
 	"encoding/json"
-	"github.com/asaskevich/govalidator"
+	// "fmt"
 	"net/http"
+
+	"github.com/asaskevich/govalidator"
 )
 
 func GetAllOrder(response http.ResponseWriter, request *http.Request) {
