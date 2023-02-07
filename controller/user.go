@@ -69,8 +69,6 @@ func (u *User) Register(user model.RegisterUser) (*model.User, error) {
 	// 	return nil, err
 	// }
 	if user.Password == user.Confirm_password {
-		// var index int = Userlist[len(Userlist)-1].ID + 1
-		// user.ID = index
 		u := model.User{
 			Email:    user.Email,
 			Username: user.Username,
@@ -79,20 +77,8 @@ func (u *User) Register(user model.RegisterUser) (*model.User, error) {
 		}
 		result := db.Create(&u)
 		if result.Error != nil {
-			// fmt.Println(result.Error)
 			return nil, result.Error
 		}
-		// Userlist = append(Userlist, u)
-
-		// userfile, err := os.OpenFile("./db/users.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		// Check(err)
-
-		// defer userfile.Close()
-		// w := bufio.NewWriter(userfile)
-		// s := fmt.Sprintf("ID: %d, Username: %s, Password: %s, Role: %s, Email: %s \n", user.ID, user.Username, user.Password, user.Role, user.Email)
-		// _, err1 := w.WriteString(s)
-		// Check(err1)
-		// w.Flush()
 		return &u, nil
 	}
 

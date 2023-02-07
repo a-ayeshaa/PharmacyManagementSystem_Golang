@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+
 	"github.com/asaskevich/govalidator"
 
 	"github.com/go-chi/chi/v5"
@@ -59,7 +60,13 @@ func AddMedicine(response http.ResponseWriter, request *http.Request) {
 
 	}
 	println(result)
-	newmed := con.NewMedicine().AddMedicine(med)
+	newmed, err := con.NewMedicine().AddMedicine(med)
+	if err != nil {
+		// println("error: " + err.Error())
+		http.Error(response, err.Error(), http.StatusBadRequest)
+		return
+
+	}
 	err = json.NewEncoder(response).Encode(newmed)
 	response.WriteHeader(http.StatusOK)
 	if err != nil {
@@ -93,6 +100,7 @@ func UpdateMedicinebyID(response http.ResponseWriter, request *http.Request) {
 	}
 	response.Header().Set("Content-Type", "application/json")
 	var update_med model.Medicine
+	update_med.Id = med_id
 	err := json.NewDecoder(request.Body).Decode(&update_med)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusBadRequest)

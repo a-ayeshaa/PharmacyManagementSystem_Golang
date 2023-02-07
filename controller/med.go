@@ -3,10 +3,12 @@ package controller
 import (
 	populate "PharmaProject/migration"
 	model "PharmaProject/models"
-	"bufio"
+
+	// "bufio"
 	"errors"
 	"fmt"
-	"os"
+
+	// "os"
 	"strings"
 )
 
@@ -44,80 +46,93 @@ func NewMedicine() MedicineController {
 }
 
 func (medicine *Medicine) GetAllMedicines() []model.Medicine {
-	return medDb()
+	var med []model.Medicine
+	db.Find(&med)
+	return med
 }
 
 func (medicine *Medicine) GetMedicine(Id int) (*model.Medicine, error) {
-	meds := medDb()
-	for _, val := range meds {
-		if val.Id == Id {
-			return &val, nil
-		}
+	var med model.Medicine
+	result := db.First(&med, Id)
+	if result.Error == nil {
+		return &med, nil
 	}
 	return nil, errors.New("Medicine could not be found")
 }
 
-func (medicine *Medicine) AddMedicine(M model.Medicine) model.Medicine {
-	var index int = Medlist[len(Medlist)-1].Id + 1
-	M.Id = index
-	Medlist = append(Medlist, M)
-	medfile, err := os.OpenFile("./db/medicines.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	Check(err)
+func (medicine *Medicine) AddMedicine(M model.Medicine) (*model.Medicine, error) {
+	//
+	// db.Create(&Medlist)
 
-	//adding to file
-	defer medfile.Close()
-	w := bufio.NewWriter(medfile)
-	s := fmt.Sprintf("ID: %d, Name: %s, Price: %d \n", M.Id, M.Name, M.Price)
-	_, err1 := w.WriteString(s)
-	Check(err1)
-	w.Flush()
-	return M
+	result := db.Create(&M)
+	if result.Error != nil {
+		// fmt.Println(M.Id)
+		return nil, result.Error
+	}
+	// fmt.Println(M.Id)
+	return &M, nil
 }
 
 func (medicine *Medicine) DeleteMedicine(Id int) (bool, error) {
 	// var med []Medicine
-	for i, medval := range Medlist {
-		if medval.Id == Id {
-			Medlist = append(Medlist[:i], Medlist[i+1:]...)
-			// fmt.Println(Medlist)
-			medfile, err := os.Create("./db/medicines.txt")
-			Check(err)
+	// for i, medval := range Medlist {
+	// 	if medval.Id == Id {
+	// 		Medlist = append(Medlist[:i], Medlist[i+1:]...)
+	// 		// fmt.Println(Medlist)
+	// 		medfile, err := os.Create("./db/medicines.txt")
+	// 		Check(err)
 
-			defer medfile.Close()
-			w := bufio.NewWriter(medfile)
-			for _, medval := range Medlist {
-				s := fmt.Sprintf("ID: %d, Name: %s, Price: %d \n", medval.Id, medval.Name, medval.Price)
-				_, err := w.WriteString(s)
-				Check(err)
-			}
-			w.Flush()
+	// 		defer medfile.Close()
+	// 		w := bufio.NewWriter(medfile)
+	// 		for _, medval := range Medlist {
+	// 			s := fmt.Sprintf("ID: %d, Name: %s, Price: %d \n", medval.Id, medval.Name, medval.Price)
+	// 			_, err := w.WriteString(s)
+	// 			Check(err)
+	// 		}
+	// 		w.Flush()
 
-			return true, nil
-		}
+	// 		return true, nil
+	// 	}
+	// }
+	var med model.Medicine
+	fmt.Println(Id)
+	result := db.Delete(&med, Id) ///
+	if result.RowsAffected > 0 {
+		// fmt.Println(result.Error)
+		return true, nil
 	}
-
 	return false, errors.New("Medicine does not exist")
 
 }
 
 func (medicine *Medicine) UpdateMedicine(med model.Medicine) (*model.Medicine, error) {
-	for i, medval := range Medlist {
-		if medval.Id == med.Id {
-			Medlist[i] = med
-			// fmt.Println(Medlist)
-			medfile, err := os.Create("./db/medicines.txt")
-			Check(err)
+	// for i, medval := range Medlist {
+	// 	if medval.Id == med.Id {
+	// 		Medlist[i] = med
+	// 		// fmt.Println(Medlist)
+	// 		medfile, err := os.Create("./db/medicines.txt")
+	// 		Check(err)
 
-			defer medfile.Close()
-			w := bufio.NewWriter(medfile)
-			for _, medval := range Medlist {
-				s := fmt.Sprintf("ID: %d, Name: %s, Price: %d \n", medval.Id, medval.Name, medval.Price)
-				_, err := w.WriteString(s)
-				Check(err)
-			}
-			w.Flush()
-			return &med, nil
+	// 		defer medfile.Close()
+	// 		w := bufio.NewWriter(medfile)
+	// 		for _, medval := range Medlist {
+	// 			s := fmt.Sprintf("ID: %d, Name: %s, Price: %d \n", medval.Id, medval.Name, medval.Price)
+	// 			_, err := w.WriteString(s)
+	// 			Check(err)
+	// 		}
+	// 		w.Flush()
+	// 		return &med, nil
+	// 	}
+	// }
+	var up model.Medicine
+	result := db.First(&up, med.Id)
+	if result.Error == nil {
+		result = db.Model(&up).Updates(&med)
+		// fmt.Println(result.Error)
+		if result.RowsAffected > 0 {
+			return &up, nil
 		}
+		return nil, result.Error
 	}
 	return nil, errors.New("Medicine does not exist")
 
