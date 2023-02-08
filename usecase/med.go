@@ -2,32 +2,14 @@ package controller
 
 import (
 	model "PharmaProject/models"
+	"PharmaProject/repository"
 	"errors"
-	"fmt"
-	"strings"
 )
 
 func Check(e error) {
 	if e != nil {
 		panic(e)
 	}
-}
-
-// var Medlist = populate.MedFeed()
-
-func medDb() []model.Medicine {
-	return nil
-}
-
-func Printlist(meds []model.Medicine) {
-	fmt.Println("The available medicines are : ")
-	fmt.Printf("%s \n", strings.Repeat("-", 42))
-	fmt.Printf("| %10s | %10s | %12s  |\n", "Id", "Name", "Price")
-	fmt.Printf("%s \n", strings.Repeat("-", 42))
-	for _, med := range meds {
-		fmt.Printf("| %10d | %10s | %10d tk |\n", med.Id, med.Name, med.Price)
-	}
-	fmt.Printf("%s \n", strings.Repeat("-", 42))
 }
 
 type Medicine struct {
@@ -41,88 +23,26 @@ func NewMedicine() MedicineController {
 }
 
 func (medicine *Medicine) GetAllMedicines() []model.Medicine {
-	var med []model.Medicine
-	db.Find(&med)
-	return med
+	return repository.NewMedicineRepo().GetAllMedicines()
 }
 
 func (medicine *Medicine) GetMedicine(Id int) (*model.Medicine, error) {
-	var med model.Medicine
-	result := db.First(&med, Id)
-	if result.Error == nil {
-		return &med, nil
-	}
-	return nil, errors.New("Medicine could not be found")
+	return repository.NewMedicineRepo().GetMedicine(Id)
 }
 
 func (medicine *Medicine) AddMedicine(M model.Medicine) (*model.Medicine, error) {
-	result := db.Create(&M)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-	return &M, nil
+	return repository.NewMedicineRepo().AddMedicine(M)
 }
 
 func (medicine *Medicine) DeleteMedicine(Id int) (bool, error) {
-	// var med []Medicine
-	// for i, medval := range Medlist {
-	// 	if medval.Id == Id {
-	// 		Medlist = append(Medlist[:i], Medlist[i+1:]...)
-	// 		// fmt.Println(Medlist)
-	// 		medfile, err := os.Create("./db/medicines.txt")
-	// 		Check(err)
-
-	// 		defer medfile.Close()
-	// 		w := bufio.NewWriter(medfile)
-	// 		for _, medval := range Medlist {
-	// 			s := fmt.Sprintf("ID: %d, Name: %s, Price: %d \n", medval.Id, medval.Name, medval.Price)
-	// 			_, err := w.WriteString(s)
-	// 			Check(err)
-	// 		}
-	// 		w.Flush()
-
-	// 		return true, nil
-	// 	}
-	// }
-	var med model.Medicine
-	fmt.Println(Id)
-	result := db.Delete(&med, Id) ///
-	if result.RowsAffected > 0 {
-		// fmt.Println(result.Error)
-		return true, nil
-	}
-	return false, errors.New("Medicine does not exist")
+	return repository.NewMedicineRepo().DeleteMedicine(Id)
 
 }
 
 func (medicine *Medicine) UpdateMedicine(med model.Medicine) (*model.Medicine, error) {
-	// for i, medval := range Medlist {
-	// 	if medval.Id == med.Id {
-	// 		Medlist[i] = med
-	// 		// fmt.Println(Medlist)
-	// 		medfile, err := os.Create("./db/medicines.txt")
-	// 		Check(err)
-
-	// 		defer medfile.Close()
-	// 		w := bufio.NewWriter(medfile)
-	// 		for _, medval := range Medlist {
-	// 			s := fmt.Sprintf("ID: %d, Name: %s, Price: %d \n", medval.Id, medval.Name, medval.Price)
-	// 			_, err := w.WriteString(s)
-	// 			Check(err)
-	// 		}
-	// 		w.Flush()
-	// 		return &med, nil
-	// 	}
-	// }
-	var up model.Medicine
-	result := db.First(&up, med.Id)
-	if result.Error == nil {
-		result = db.Model(&up).Updates(&med)
-		// fmt.Println(result.Error)
-		if result.RowsAffected > 0 {
-			return &up, nil
-		}
-		return nil, result.Error
+	result, err := repository.NewMedicineRepo().GetMedicine(med.Id)
+	if err == nil {
+		return repository.NewMedicineRepo().UpdateMedicine(*result, med)
 	}
 	return nil, errors.New("Medicine does not exist")
 

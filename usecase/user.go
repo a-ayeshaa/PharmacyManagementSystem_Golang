@@ -1,9 +1,8 @@
 package controller
 
 import (
-	database "PharmaProject/db"
 	model "PharmaProject/models"
-	repo "PharmaProject/repository"
+	"PharmaProject/repository"
 	"errors"
 	"fmt"
 	"net/mail"
@@ -18,8 +17,6 @@ type User struct {
 	Role     string
 }
 
-var db = database.Connect()
-
 func NewUser() UserController {
 	return &User{}
 }
@@ -31,14 +28,14 @@ func (u *User) Register(user model.RegisterUser) (*model.User, error) {
 			Role:     user.Role,
 			Password: user.Password,
 		}
-		return repo.NewUserRepo().Register(u)
+		return repository.NewUserRepo().Register(u)
 	}
 
 	return nil, errors.New("Confirm Password does not match with Password")
 }
 
 func (u *User) GetAllUsers() []model.User {
-	return repo.NewUserRepo().GetAllUsers()
+	return repository.NewUserRepo().GetAllUsers()
 }
 
 func Validate(email string) error {
@@ -58,22 +55,22 @@ func ValidatePass(pass string) {
 }
 
 func (u *User) Login(login model.Login) (*model.User, error) {
-	return repo.NewUserRepo().Login(login)
+	return repository.NewUserRepo().Login(login)
 }
 
 func (u *User) GetUserByID(id int) (*model.User, error) {
-	return repo.NewUserRepo().GetUserByID(id)
+	return repository.NewUserRepo().GetUserByID(id)
 }
 
 func (u *User) DeleteUserbyID(id int) (bool, error) {
-	return repo.NewUserRepo().DeleteUserbyID(id)
+	return repository.NewUserRepo().DeleteUserbyID(id)
 
 }
 
 func (u *User) UpdateUserbyID(user model.User) (*model.User, error) {
-	result, err := repo.NewUserRepo().GetUserByID(user.ID)
+	result, err := repository.NewUserRepo().GetUserByID(user.ID)
 	if err == nil {
-		return repo.NewUserRepo().UpdateUser(*result, user)
+		return repository.NewUserRepo().UpdateUser(*result, user)
 	}
 
 	return nil, err
