@@ -8,7 +8,6 @@ type UserController interface {
 	GetAllUsers() []model.User
 	Register(model.RegisterUser) (*model.User, error)
 	Login(model.Login) (*model.User, error)
-	ValidateUser(val string) error
 	GetUserByID(id int) (*model.User, error)
 	DeleteUserbyID(id int) (bool, error)
 	UpdateUserbyID(model.User) (*model.User, error)

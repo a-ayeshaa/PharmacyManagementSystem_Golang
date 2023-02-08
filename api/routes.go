@@ -1,15 +1,12 @@
 package api
 
 import (
-	"fmt"
-	"net/http"
-
 	"github.com/go-chi/chi/v5"
 )
 
-func Init() {
+func Init() *chi.Mux {
 	r := chi.NewRouter()
-	r.Post("/login",Login)
+	r.Post("/login", Login)
 	r.Route("/user", func(r chi.Router) {
 		r.Get("/", GetAllUsers)
 		r.Get("/{userid}", GetUserByID)
@@ -39,8 +36,7 @@ func Init() {
 		r.Post("/confirm", ConfirmOrder)
 
 	})
-	port := ":3000"
-	fmt.Println("Listening to port ", port)
-	http.ListenAndServe(port, r)
+
+	return r
 
 }

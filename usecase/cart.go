@@ -2,10 +2,8 @@ package controller
 
 import (
 	model "PharmaProject/models"
-	// "bufio"
 	"errors"
 	"fmt"
-	// "os"
 	"strings"
 )
 

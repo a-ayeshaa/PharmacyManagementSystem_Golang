@@ -1,7 +1,7 @@
 package api
 
 import (
-	con "PharmaProject/controller"
+	con "PharmaProject/usecase"
 	model "PharmaProject/models"
 	"encoding/json"
 	// "fmt"

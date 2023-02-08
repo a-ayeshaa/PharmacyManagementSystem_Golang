@@ -1,7 +1,10 @@
 version: '3.1'
 
 services:
-
+  web:
+    build: .
+    env_file:
+      - .env
   database:
     image: postgres
     container_name: pharma
@@ -11,5 +14,6 @@ services:
       - POSTGRES_DB=pharmacy_db
       - POSTGRES_USER=ayesha
       - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=localhost
     volumes:
       - ./database:/var/lib/postgresql

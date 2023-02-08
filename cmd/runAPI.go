@@ -2,9 +2,10 @@ package cmd
 
 import (
 	api "PharmaProject/api"
+	"fmt"
+	"net/http"
 
 	"github.com/spf13/cobra"
-	
 )
 
 var startAPICmd = &cobra.Command{
@@ -15,7 +16,10 @@ var startAPICmd = &cobra.Command{
 	// },
 	Short: "Initiates the Pharmacy Management System",
 	Run: func(cmd *cobra.Command, args []string) {
-		api.Init()
+		r := api.Init()
+		port := ":3000"
+		fmt.Println("Listening to port ", port)
+		http.ListenAndServe(port, r)
 	},
 }
 

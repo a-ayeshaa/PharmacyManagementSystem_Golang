@@ -7,4 +7,3 @@ EXPOSE 5432
 ENTRYPOINT ["/app/main"]
 CMD ["run"]
 
-
