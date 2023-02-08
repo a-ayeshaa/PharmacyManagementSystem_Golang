@@ -1,14 +1,9 @@
 package controller
 
 import (
-	populate "PharmaProject/migration"
 	model "PharmaProject/models"
-
-	// "bufio"
 	"errors"
 	"fmt"
-
-	// "os"
 	"strings"
 )
 
@@ -18,10 +13,10 @@ func Check(e error) {
 	}
 }
 
-var Medlist = populate.MedFeed()
+// var Medlist = populate.MedFeed()
 
 func medDb() []model.Medicine {
-	return Medlist
+	return nil
 }
 
 func Printlist(meds []model.Medicine) {

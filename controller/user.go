@@ -22,37 +22,9 @@ type User struct {
 }
 
 var db = database.Connect()
-var Userlist = Users()
 
 func NewUser() UserController {
 	return &User{}
-}
-
-func (u *User) RegisterUser(username, password, confpassword, email, role string) (*model.User, error) {
-	if password == confpassword {
-		var index int = Userlist[len(Userlist)-1].ID + 1
-		user := model.User{
-			ID:       index,
-			Username: username,
-			Password: password,
-			Role:     role,
-			Email:    email,
-		}
-		Userlist = append(Userlist, user)
-
-		userfile, err := os.OpenFile("./db/users.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		Check(err)
-
-		defer userfile.Close()
-		w := bufio.NewWriter(userfile)
-		s := fmt.Sprintf("ID:%d, Username: %s, Password: %s, Role: %s, Email: %s \n", user.ID, user.Username, user.Password, user.Role, user.Email)
-		_, err1 := w.WriteString(s)
-		Check(err1)
-		w.Flush()
-		return &user, nil
-	}
-
-	return nil, errors.New("Confirm Password does not match with Password")
 }
 func (u *User) Register(user model.RegisterUser) (*model.User, error) {
 	//Check if user already exists.....
@@ -138,15 +110,15 @@ func (u *User) GetAllUsers() []model.User {
 }
 
 func (u *User) ValidateUser(val string) error {
-	for _, user := range Userlist {
-		if user.Username == val {
-			return errors.New("Username already exists\n")
-		}
-		// fmt.Println(user.Email, val)
-		if strings.TrimSpace(user.Email) == strings.TrimSpace(val) {
-			return errors.New("Email already exists\n")
-		}
-	}
+	// for _, user := range Userlist {
+	// 	if user.Username == val {
+	// 		return errors.New("Username already exists\n")
+	// 	}
+	// 	// fmt.Println(user.Email, val)
+	// 	if strings.TrimSpace(user.Email) == strings.TrimSpace(val) {
+	// 		return errors.New("Email already exists\n")
+	// 	}
+	// }
 	return nil
 }
 

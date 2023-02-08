@@ -2,55 +2,14 @@ package controller
 
 import (
 	model "PharmaProject/models"
-	"bufio"
 	"errors"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
 )
-
-var OrderList = Orders()
 
 type Order struct {
 	Id         int
 	Username   string
 	Totalprice int
-}
-
-func Orders() []model.Order {
-	order := make([]model.Order, 0)
-
-	orderfile, err := os.Open("./db/orders.txt")
-	Check(err)
-
-	defer orderfile.Close()
-
-	var lines []string
-	scanner := bufio.NewScanner(orderfile)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	for _, val := range lines {
-		arr := strings.Split(val, ", ")
-		var new model.Order
-		for _, val2 := range arr {
-			u := strings.Split(val2, ": ")
-			// fmt.Println("u:",u)
-			if u[0] == "Username" {
-				new.Username = u[1]
-			}
-			if u[0] == "ID" {
-				new.Id, _ = strconv.Atoi(u[1])
-				// fmt.Println(new.ID)
-			}
-			if u[0] == "Total Price" {
-				new.Totalprice, _ = strconv.Atoi(u[1])
-			}
-		}
-		order = append(order, new)
-	}
-	return order
 }
 
 func NewOrder() OrderController {

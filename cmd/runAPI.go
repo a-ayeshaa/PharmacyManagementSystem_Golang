@@ -11,8 +11,8 @@ var startAPICmd = &cobra.Command{
 	Use:     "run",
 	Aliases: []string{"r", "ru"},
 	// SuggestFor: []string{"start"},
-	PreRun: func(cmd *cobra.Command, args []string) {
-	},
+	// PreRun: func(cmd *cobra.Command, args []string) {
+	// },
 	Short: "Initiates the Pharmacy Management System",
 	Run: func(cmd *cobra.Command, args []string) {
 		api.Init()

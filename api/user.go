@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-
 	"github.com/asaskevich/govalidator"
 	"github.com/go-chi/chi/v5"
 )

@@ -2,14 +2,17 @@ package db
 
 import (
 	model "PharmaProject/models"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func Connect() *gorm.DB {
+	conn, err := LoadConfig()
+	dsn := "dbname=" + conn.DBName + " host=" + conn.DBHost + " user=" + conn.DBUser + " password=" + conn.DBPassword + " port=" + conn.DBPort + " sslmode=disable"
 	db, err := gorm.Open(postgres.New(postgres.Config{
-		DSN:                  "host=localhost user=ayesha password=password dbname=pharmacy_db port=8080 sslmode=disable",
-		PreferSimpleProtocol: true, // disables implicit prepared statement usage
+		DSN:                  dsn,
+		PreferSimpleProtocol: true,
 	}), &gorm.Config{})
 	if err != nil {
 		panic(err)
