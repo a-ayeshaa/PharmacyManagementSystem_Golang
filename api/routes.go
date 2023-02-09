@@ -1,11 +1,17 @@
 package api
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/go-chi/chi/v5"
 )
 
 func Init() *chi.Mux {
 	r := chi.NewRouter()
+	r.Get("/",func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello ayesha!")
+	})
 	r.Post("/login", Login)
 	r.Route("/user", func(r chi.Router) {
 		r.Get("/", GetAllUsers)

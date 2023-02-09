@@ -9,8 +9,8 @@ import (
 )
 
 var startAPICmd = &cobra.Command{
-	Use:     "run",
-	Aliases: []string{"r", "ru"},
+	Use:     "serve",
+	Aliases: []string{"s", "ser","serv"},
 	// SuggestFor: []string{"start"},
 	// PreRun: func(cmd *cobra.Command, args []string) {
 	// },

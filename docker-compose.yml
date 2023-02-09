@@ -1,19 +1,44 @@
 version: '3.1'
 
 services:
-  web:
-    build: .
-    env_file:
-      - .env
+  # api:
+  #   depends_on:
+  #     - database
+  #   build: .
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - mynet
   database:
     image: postgres
     container_name: pharma
     ports:
-      - 8081:8080
+      - 5432:5432
+    networks:
+      - mynet
     environment:
-      - POSTGRES_DB=pharmacy_db
-      - POSTGRES_USER=ayesha
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_HOST=localhost
+      POSTGRES_DB: pharmacy_db
+      POSTGRES_USER: ayesha
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST: 127.0.0.1
     volumes:
       - ./database:/var/lib/postgresql
+networks:
+  mynet:
+    driver: bridge
+#  db:
+#    image: postgres:alpine
+#    restart: always
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: example
+#      POSTGRES_DB: bornil
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - bornil-db:/var/lib/postgresql/data
+#
+#volumes:
+#  bornil-db:

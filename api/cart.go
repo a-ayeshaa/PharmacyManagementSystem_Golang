@@ -1,11 +1,12 @@
 package api
 
 import (
-	con "PharmaProject/usecase"
 	model "PharmaProject/models"
+	con "PharmaProject/usecase"
 	"encoding/json"
 	"net/http"
 	"strconv"
+
 	"github.com/asaskevich/govalidator"
 
 	"github.com/go-chi/chi/v5"
@@ -46,7 +47,7 @@ func AddtoCart(response http.ResponseWriter, request *http.Request) {
 	}
 	response.Header().Set("Content-Type", "application/json")
 	var med model.Cart
-	
+
 	err := json.NewDecoder(request.Body).Decode(&med)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusBadRequest)
@@ -60,7 +61,7 @@ func AddtoCart(response http.ResponseWriter, request *http.Request) {
 
 	}
 	println(result)
-	newmed,err := con.NewCart().AddtoCart(med)
+	newmed, err := con.NewCart().AddtoCart(med)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusBadRequest)
 		return

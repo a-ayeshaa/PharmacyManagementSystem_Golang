@@ -5,5 +5,5 @@ WORKDIR /app
 RUN go build -o main .
 EXPOSE 5432
 ENTRYPOINT ["/app/main"]
-CMD ["run"]
+CMD ["serve"]
 
