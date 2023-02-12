@@ -8,8 +8,12 @@ import (
 )
 
 func Connect() *gorm.DB {
-	conn, err := LoadConfig()
-	dsn := "dbname=" + conn.DBName + " host=" + conn.DBHost + " user=" + conn.DBUser + " password=" + conn.DBPassword + " port=" + conn.DBPort + " sslmode=disable"
+	//
+	LoadDB()
+	con:= DB()
+	// println(con.Name)
+	// conn, err := LoadConfig()
+	dsn := "dbname=" + con.Name + " host=" + con.Host + " user=" + con.Username + " password=" + con.Password + " port=" + con.Port + " sslmode=disable"
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		DSN:                  dsn,
 		PreferSimpleProtocol: true,
@@ -18,5 +22,7 @@ func Connect() *gorm.DB {
 		panic(err)
 	}
 	db.AutoMigrate(model.User{}, model.Cart{}, model.Medicine{}, model.Order{})
+	db.Debug()
 	return db
 }
+

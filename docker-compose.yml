@@ -25,9 +25,14 @@ services:
       POSTGRES_HOST: 127.0.0.1
     volumes:
       - ./database:/var/lib/postgresql
+  consul:
+    image: consul:latest
+    ports:
+      - 8500:8500
 networks:
   mynet:
     driver: bridge
+
 #  db:
 #    image: postgres:alpine
 #    restart: always
