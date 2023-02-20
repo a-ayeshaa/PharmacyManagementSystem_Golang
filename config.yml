@@ -7,3 +7,5 @@ database:
     options:
         sslmode:
             - disable
+amqp:
+    uri: "amqp://guest:guest@localhost:5672/"

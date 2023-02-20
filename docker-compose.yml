@@ -29,21 +29,11 @@ services:
     image: consul:latest
     ports:
       - 8500:8500
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "15672:15672"
+      - "5672:5672"
 networks:
   mynet:
     driver: bridge
-
-#  db:
-#    image: postgres:alpine
-#    restart: always
-#    environment:
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: example
-#      POSTGRES_DB: bornil
-#    ports:
-#      - "5432:5432"
-#    volumes:
-#      - bornil-db:/var/lib/postgresql/data
-#
-#volumes:
-#  bornil-db:

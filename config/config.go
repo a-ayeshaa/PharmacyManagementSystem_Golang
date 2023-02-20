@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/spf13/viper"
+	_ "github.com/spf13/viper/remote"
 )
 
 // Init initiates of config load
