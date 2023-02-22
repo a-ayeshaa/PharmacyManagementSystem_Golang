@@ -1,4 +1,4 @@
-package amqp
+package worker
 
 import (
 	"PharmaProject/connection"

@@ -1,4 +1,4 @@
-package amqp
+package worker
 
 import (
 	"PharmaProject/connection"
@@ -43,7 +43,7 @@ func ReceiveTask() {
 	helper.FailOnError(err, "Failed to register a consumer")
 
 	var forever chan struct{}
-
+	count:=0
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
@@ -53,6 +53,8 @@ func ReceiveTask() {
 			if err != nil {
 				
 			}
+			count+=1
+			fmt.Println(count)
 			fmt.Println(newmed)
 		}
 

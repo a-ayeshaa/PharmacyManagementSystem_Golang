@@ -40,6 +40,7 @@ func (medicine *Medicine) GetMedicine(Id int) (*model.Medicine, error) {
 }
 
 func (medicine *Medicine) AddMedicine(M model.Medicine) (*model.Medicine, error) {
+	fmt.Println(M)
 	result := db.Create(&M)
 	if result.Error != nil {
 		return nil, result.Error
@@ -48,6 +49,7 @@ func (medicine *Medicine) AddMedicine(M model.Medicine) (*model.Medicine, error)
 }
 
 func (medicine *Medicine) AddBulkMedicine(M []model.Medicine) (*[]model.Medicine, error) {
+	// fmt.Println(M)
 	result := db.Create(&M)
 	if result.Error != nil {
 		return nil, result.Error

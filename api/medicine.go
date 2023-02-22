@@ -1,10 +1,11 @@
 package api
 
 import (
-	worker "PharmaProject/worker"
 	model "PharmaProject/models"
 	con "PharmaProject/usecase"
+	worker "PharmaProject/worker"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -83,11 +84,25 @@ func AddBulkMedicine(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 	response.Header().Set("Content-Type", "application/json")
-	jsonVal:=request.Body
+	jsonVal := request.Body
+	var meds []model.Medicine
+	err := json.NewDecoder(request.Body).Decode(&meds)
+	if err != nil {
+		http.Error(response, err.Error(), http.StatusBadRequest)
+		return
+	}
+	for _,med := range meds {
+		fmt.Println(med)
+		result, err := govalidator.ValidateStruct(med)
+		if err != nil {
+			// println("error: " + err.Error())
+			http.Error(response, err.Error(), http.StatusBadRequest)
+			return
+
+		}
+		println(result)
+	}
 	worker.SendTask(jsonVal)
-	go func() {
-		worker.ReceiveTask()
-	}()
 }
 
 func DeleteMedicinebyID(response http.ResponseWriter, request *http.Request) {
