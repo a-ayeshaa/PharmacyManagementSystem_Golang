@@ -1,8 +1,9 @@
 package api
 
 import (
-	con "PharmaProject/usecase"
+	worker "PharmaProject/worker"
 	model "PharmaProject/models"
+	con "PharmaProject/usecase"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -73,6 +74,20 @@ func AddMedicine(response http.ResponseWriter, request *http.Request) {
 		http.Error(response, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func AddBulkMedicine(response http.ResponseWriter, request *http.Request) {
+	contentType := request.Header.Get("Content-Type")
+	if contentType != "" && contentType != "application/json" {
+		http.Error(response, "Content-Type header is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	response.Header().Set("Content-Type", "application/json")
+	jsonVal:=request.Body
+	worker.SendTask(jsonVal)
+	go func() {
+		worker.ReceiveTask()
+	}()
 }
 
 func DeleteMedicinebyID(response http.ResponseWriter, request *http.Request) {

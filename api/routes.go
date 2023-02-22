@@ -24,7 +24,8 @@ func Init() *chi.Mux {
 	r.Route("/medicine", func(r chi.Router) {
 		r.Get("/", GetAllMedicines)
 		r.Get("/{med_id}", GetMedbyID)
-		r.Post("/add", AddMedicine)
+		// r.Post("/add", AddMedicine)
+		r.Post("/add", AddBulkMedicine)
 		r.Delete("/delete/{med_id}", DeleteMedicinebyID)
 		r.Post("/update/{med_id}", UpdateMedicinebyID)
 

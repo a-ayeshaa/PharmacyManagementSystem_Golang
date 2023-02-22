@@ -17,6 +17,7 @@ type MedicineController interface {
 	GetAllMedicines() []model.Medicine
 	GetMedicine(Id int) (*model.Medicine, error)
 	AddMedicine(med model.Medicine) (*model.Medicine,error)
+	AddBulkMedicine(meds []model.Medicine) (*[]model.Medicine,error)
 	DeleteMedicine(Id int) (bool, error)
 	UpdateMedicine(med model.Medicine) (*model.Medicine, error)
 }

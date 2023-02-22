@@ -15,6 +15,7 @@ type MedicineRepo interface {
 	GetAllMedicines() []model.Medicine
 	GetMedicine(Id int) (*model.Medicine, error)
 	AddMedicine(med model.Medicine) (*model.Medicine, error)
+	AddBulkMedicine(meds []model.Medicine) (*[]model.Medicine,error)
 	DeleteMedicine(Id int) (bool, error)
 	UpdateMedicine(med model.Medicine, update_med model.Medicine) (*model.Medicine, error)
 }
@@ -46,6 +47,13 @@ func (medicine *Medicine) AddMedicine(M model.Medicine) (*model.Medicine, error)
 	return &M, nil
 }
 
+func (medicine *Medicine) AddBulkMedicine(M []model.Medicine) (*[]model.Medicine, error) {
+	result := db.Create(&M)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &M, nil
+}
 func (medicine *Medicine) DeleteMedicine(Id int) (bool, error) {
 	var med model.Medicine
 	fmt.Println(Id)

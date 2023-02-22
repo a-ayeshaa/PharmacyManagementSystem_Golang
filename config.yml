@@ -9,3 +9,11 @@ database:
             - disable
 amqp:
     uri: "amqp://guest:guest@localhost:5672/"
+
+worker:
+    name: "add_med_task"
+    durable: false
+    autoDelete: false
+    exclusive: false
+    noWait: false 
+    args: nil

@@ -33,6 +33,9 @@ func (medicine *Medicine) GetMedicine(Id int) (*model.Medicine, error) {
 func (medicine *Medicine) AddMedicine(M model.Medicine) (*model.Medicine, error) {
 	return repository.NewMedicineRepo().AddMedicine(M)
 }
+func (medicine *Medicine) AddBulkMedicine(M []model.Medicine) (*[]model.Medicine, error) {
+	return repository.NewMedicineRepo().AddBulkMedicine(M)
+}
 
 func (medicine *Medicine) DeleteMedicine(Id int) (bool, error) {
 	return repository.NewMedicineRepo().DeleteMedicine(Id)
