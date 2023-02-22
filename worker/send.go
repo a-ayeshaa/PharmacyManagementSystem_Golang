@@ -4,8 +4,6 @@ import (
 	"PharmaProject/connection"
 	"PharmaProject/helper"
 	"context"
-	"io"
-	"io/ioutil"
 	"log"
 	"time"
 
@@ -21,13 +19,15 @@ type QueueConfig struct {
 	noWait     bool
 }
 
-func SendTask(meds io.ReadCloser) {
+func SendTask(meds []byte) {
+	// fmt.Println(meds)
 	conn := connection.AMQPCon()
 	defer conn.Close()
 	ch, err := conn.Channel()
 	helper.FailOnError(err, "Failed to open a channel")
 
 	defer ch.Close()
+	// Direct exchange ....
 	q, err := ch.QueueDeclare(
 		viper.GetString("worker.name"),
 		viper.GetBool("worker.durable"),
@@ -41,7 +41,7 @@ func SendTask(meds io.ReadCloser) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	body,err := ioutil.ReadAll(meds)
+	// body, err := ioutil.ReadAll(meds)
 	err = ch.PublishWithContext(ctx,
 		"",     // exchange
 		q.Name, // routing key
@@ -49,8 +49,37 @@ func SendTask(meds io.ReadCloser) {
 		false,  // immediate
 		amqp.Publishing{
 			ContentType: "application/json",
-			Body:        body,
+			Body:        meds,
 		})
 	helper.FailOnError(err, "Failed to publish a message")
-	log.Printf(" [x] Sent %s\n", body)
+	log.Printf(" [x] Sent %s\n", meds)
+
+	// Fanout exchange ...
+	// err = ch.ExchangeDeclare(
+	// 	"logs",   // name
+	// 	"fanout", // type
+	// 	true,     // durable
+	// 	false,    // auto-deleted
+	// 	false,    // internal
+	// 	false,    // no-wait
+	// 	nil,      // arguments
+	// )
+	// helper.FailOnError(err, "Failed to declare an exchange")
+
+	// ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	// defer cancel()
+
+	// // body, err := ioutil.ReadAll(meds)
+	// err = ch.PublishWithContext(ctx,
+	// 	"logs", // exchange
+	// 	"",     // routing key
+	// 	false,  // mandatory
+	// 	false,  // immediate
+	// 	amqp.Publishing{
+	// 		ContentType: "application/json",
+	// 		Body:        meds,
+	// 	})
+	// helper.FailOnError(err, "Failed to publish a message")
+
+	// log.Printf(" [x] Sent %s", meds)
 }

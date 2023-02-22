@@ -4,6 +4,7 @@ import (
 	model "PharmaProject/models"
 	con "PharmaProject/usecase"
 	worker "PharmaProject/worker"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -84,15 +85,16 @@ func AddBulkMedicine(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 	response.Header().Set("Content-Type", "application/json")
-	jsonVal := request.Body
+	// jsonVal, err := ioutil.ReadAll(request.Body)
 	var meds []model.Medicine
 	err := json.NewDecoder(request.Body).Decode(&meds)
 	if err != nil {
+		fmt.Println("Error while decoding")
 		http.Error(response, err.Error(), http.StatusBadRequest)
 		return
 	}
-	for _,med := range meds {
-		fmt.Println(med)
+	for _, med := range meds {
+		// fmt.Println(med)
 		result, err := govalidator.ValidateStruct(med)
 		if err != nil {
 			// println("error: " + err.Error())
@@ -101,8 +103,15 @@ func AddBulkMedicine(response http.ResponseWriter, request *http.Request) {
 
 		}
 		println(result)
+		if med.Price < 0 {
+			http.Error(response, "Price must be greater than 0", http.StatusBadRequest)
+			return
+		}
 	}
-	worker.SendTask(jsonVal)
+	jsonMeds := new(bytes.Buffer)
+	json.NewEncoder(jsonMeds).Encode(meds)
+
+	worker.SendTask(jsonMeds.Bytes())
 }
 
 func DeleteMedicinebyID(response http.ResponseWriter, request *http.Request) {
