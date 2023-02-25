@@ -1,16 +1,19 @@
 package api
 
 import (
+	"PharmaProject/conn"
 	model "PharmaProject/models"
+	"PharmaProject/task"
 	con "PharmaProject/usecase"
-	worker "PharmaProject/worker"
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
+	"github.com/RichardKnop/machinery/v1/tasks"
 	"github.com/asaskevich/govalidator"
+	"github.com/thedevsaddam/retry"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -108,10 +111,30 @@ func AddBulkMedicine(response http.ResponseWriter, request *http.Request) {
 			return
 		}
 	}
-	jsonMeds := new(bytes.Buffer)
-	json.NewEncoder(jsonMeds).Encode(meds)
+	pld,err := json.Marshal(meds)
+	// json.NewEncoder(pld).Encode(meds)
 
-	worker.SendTask(jsonMeds.Bytes())
+	// fmt.Println("error")
+	errCh := make(chan error, 1)
+	go func() {
+		err := retry.DoFunc(3, 1*time.Second, func() error {
+			_, err := conn.DefaultWorker().SendTask(&tasks.Signature{
+				Name:         task.TaskAddMedicine,
+				RetryCount:   1,
+				RetryTimeout: 10,
+				Args: []tasks.Arg{
+					{
+						Type:  "string",
+						Value: string(pld),
+					},
+				},
+			})
+			fmt.Println(err)
+			return err
+		})
+		errCh <- err
+	}()
+	// worker.SendTask(jsonMeds.Bytes())
 }
 
 func DeleteMedicinebyID(response http.ResponseWriter, request *http.Request) {

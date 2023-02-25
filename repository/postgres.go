@@ -1,7 +1,7 @@
 package repository
 
 import (
-	database "PharmaProject/db"
+	database "PharmaProject/conn"
 )
 
-var db = database.Connect()
+var db = database.ConnectDB()

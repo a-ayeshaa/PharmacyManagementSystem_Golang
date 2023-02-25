@@ -10,10 +10,29 @@ database:
 amqp:
     uri: "amqp://guest:guest@localhost:5672/"
 
+# worker for using machinery
 worker:
-    name: "add_med_task"
-    durable: false
-    autoDelete: false
-    exclusive: false
-    noWait: false 
-    args: nil
+  job_queue: "pharma_tasks"
+  result_ttl: 3600 #second
+  exchange_name: "pharma_exchange_tasks"
+  exchange_type: "direct"
+  binding_key: "pharma_tasks"
+  prefetch_count: 1
+  timeout: 10 #seconds
+  sleep_timeout: 0 #seconds
+
+redis:
+  host: "127.0.0.1"
+  port: 6379
+  db: 0
+  password: ""
+  prefix: "pharma_"
+  cache_ttl: 120 #seconds
+# woker for using rabbitmq ..
+# worker:
+#     name: "add_med_task"
+#     durable: false
+#     autoDelete: false
+#     exclusive: false
+#     noWait: false 
+#     args: nil

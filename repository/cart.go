@@ -19,18 +19,18 @@ type CartRepo interface {
 	GetItemfromCart(int) (*model.Cart, error)
 	RemovefromCart(Id int) (bool, error)
 	EmptyCart()
-	GetfromCart(model.Cart) (*model.Cart,error)
-	UpdateCart(model.Cart,model.Cart) (*model.Cart,error)
+	GetfromCart(model.Cart) (*model.Cart, error)
+	UpdateCart(model.Cart, model.Cart) (*model.Cart, error)
 }
 
 func NewCartRepo() CartRepo {
 	return &Cart{}
 }
 
-func (ca *Cart) GetfromCart(m model.Cart) (*model.Cart,error){
+func (ca *Cart) GetfromCart(m model.Cart) (*model.Cart, error) {
 	var upmed model.Cart
 	result := db.First(&upmed, m)
-	return &upmed,result.Error
+	return &upmed, result.Error
 }
 
 func (ca *Cart) GetAllfromCart() []model.Cart {
@@ -64,11 +64,11 @@ func (ca *Cart) RemovefromCart(id int) (bool, error) {
 
 }
 
-func (ca *Cart) EmptyCart(){
+func (ca *Cart) EmptyCart() {
 	db.Exec("Truncate table carts")
 }
 
-func (ca *Cart) UpdateCart(cart model.Cart,update_cart model.Cart) (*model.Cart,error){
+func (ca *Cart) UpdateCart(cart model.Cart, update_cart model.Cart) (*model.Cart, error) {
 	result := db.Model(&cart).Updates(update_cart)
 	if result.RowsAffected <= 0 {
 		return nil, result.Error
