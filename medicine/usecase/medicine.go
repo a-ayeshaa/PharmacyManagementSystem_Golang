@@ -22,22 +22,22 @@ func New(medicineRepo domain.MedicineRepository) domain.MedicineUseCase {
 }
 
 func (medicine *Medicine) GetAllMedicines() []domain.Medicine {
-	return medicine.GetAllMedicines()
+	return medicine.medicineRepo.GetAllMedicines()
 }
 
 func (medicine *Medicine) GetMedicine(Id int) (*domain.Medicine, error) {
-	return medicine.GetMedicine(Id)
+	return medicine.medicineRepo.GetMedicine(Id)
 }
 
 func (medicine *Medicine) AddMedicine(med domain.Medicine) (*domain.Medicine, error) {
-	return medicine.AddMedicine(med)
+	return medicine.medicineRepo.AddMedicine(med)
 }
 func (medicine *Medicine) AddBulkMedicine(meds []domain.Medicine) (*[]domain.Medicine, error) {
-	return medicine.AddBulkMedicine(meds)
+	return medicine.medicineRepo.AddBulkMedicine(meds)
 }
 
 func (medicine *Medicine) DeleteMedicine(Id int) (bool, error) {
-	return medicine.DeleteMedicine(Id)
+	return medicine.medicineRepo.DeleteMedicine(Id)
 
 }
 
