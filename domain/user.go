@@ -46,7 +46,7 @@ type UserUseCase interface {
 // UserRepository
 type UserRepository interface {
 	GetAllUsers() []User
-	Register(User) (*User, error)
+	Register(ureg User) (*User, error)
 	Login(Login) (*User, error)
 	GetUserByID(id int) (*User, error)
 	DeleteUserbyID(id int) (bool, error)
