@@ -1,7 +1,7 @@
 package conn
 
 import (
-	"PharmaProject/config"
+	"PharmaProject/internal/config"
 	"time"
 
 	machinery "github.com/RichardKnop/machinery/v1"

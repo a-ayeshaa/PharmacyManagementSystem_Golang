@@ -1,7 +1,7 @@
 package conn
 
 import (
-	"PharmaProject/config"
+	"PharmaProject/internal/config"
 
 	"github.com/go-redis/redis"
 )

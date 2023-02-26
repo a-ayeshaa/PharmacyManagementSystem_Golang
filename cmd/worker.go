@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"PharmaProject/conn"
+	"PharmaProject/internal/conn"
 	"PharmaProject/worker"
 	"fmt"
 	"log"

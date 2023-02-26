@@ -1,6 +1,6 @@
 package conn
 
-import "PharmaProject/config"
+import "PharmaProject/internal/config"
 
 var defaultAssignWorker Worker
 

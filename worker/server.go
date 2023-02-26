@@ -1,7 +1,7 @@
 package worker
 
 import (
-	"PharmaProject/config"
+	"PharmaProject/internal/config"
 	"log"
 	"time"
 

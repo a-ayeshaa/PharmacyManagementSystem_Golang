@@ -70,7 +70,7 @@ func (medicine *Medicine) UpdateMedicine(med domain.Medicine, update_med domain.
 
 	result := medicine.db.Model(&med).Updates(&update_med)
 	if result.RowsAffected > 0 {
-		return &update_med, nil
+		return &med, nil
 	}
 	return nil, result.Error
 

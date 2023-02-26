@@ -1,10 +1,11 @@
 package conn
 
 import (
-	"PharmaProject/config"
-	model "PharmaProject/models"
+	"PharmaProject/internal/config"
+	"PharmaProject/domain"
 	"fmt"
 	"net/url"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -31,12 +32,12 @@ func Connect(config *config.Database) *gorm.DB {
 		uri.RawQuery = val.Encode()
 	}
 	// fmt.Println(uri.String())
-	d, err := gorm.Open("postgres",uri.String())
+	d, err := gorm.Open("postgres", uri.String())
 	if err != nil {
 		panic(err)
 	}
-	db=d
-	db.AutoMigrate(model.User{}, model.Cart{}, model.Medicine{}, model.Order{})
+	db = d
+	db.AutoMigrate(domain.User{}, domain.Cart{}, domain.Medicine{}, domain.Order{})
 	db.Debug()
 	return db
 }

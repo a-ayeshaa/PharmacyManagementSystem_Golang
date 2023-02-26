@@ -1,10 +1,10 @@
 package task
 
 import (
-	"PharmaProject/config"
-	"PharmaProject/conn"
-	"PharmaProject/models"
-	"PharmaProject/repository"
+	"PharmaProject/internal/config"
+	"PharmaProject/domain"
+	"PharmaProject/internal/conn"
+	"PharmaProject/medicine/repository"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -14,21 +14,16 @@ import (
 
 func AddMedicine(pld string) error {
 	fmt.Println("error")
-	meds := []models.Medicine{}
+	meds := []domain.Medicine{}
 	if err := json.Unmarshal([]byte(pld), &meds); err != nil {
 		log.Println("Could not decode create notification task payload")
 		return err
 	}
 
 	fmt.Println(meds)
-
-	// db := conn.ConnectDB()
-	// repo := repository.NewSQLNotificationRepository(db)
-	result, err := repository.NewMedicineRepo().AddBulkMedicine(meds)
+	db := conn.ConnectDB()
+	result, err := repository.New(db).AddBulkMedicine(meds)
 	if err != nil {
-		// helper.CaptureError(err, map[string]string{"source": "task", "message": "failed to create notification"})
-		// log.Println(err.Error())
-		// helper.Status("create_assign_notification", c.AppName, http.StatusInternalServerError)
 		return err
 	}
 	fmt.Println(result)
