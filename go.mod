@@ -6,6 +6,7 @@ require (
 	github.com/RichardKnop/machinery v1.10.6
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
 	github.com/go-chi/chi/v5 v5.0.8
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/jinzhu/gorm v1.9.16
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.8.1
@@ -13,7 +14,6 @@ require (
 
 require (
 	github.com/bketelsen/crypt v0.0.4 // indirect
-	github.com/go-redis/redis v6.15.9+incompatible // indirect
 	github.com/jstemmer/go-junit-report v0.9.1 // indirect
 	github.com/pelletier/go-toml v1.9.3 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
